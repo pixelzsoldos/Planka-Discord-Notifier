@@ -127,7 +127,7 @@ app.post("/", (req, res) => {
       // Build description with new format
       const mainText = `${boardEmoji} **${eventData.boardName}** ${config.strings.board} ${emoji} **${eventData.name}** ${config.strings.card} ${actionText}`;
       const description = showCardLink ? 
-        `${mainText}\n\n[${config.strings.actions.cardMove}](${eventData.url})` : 
+        `${mainText}\n\n[${config.strings.cardLink}](${eventData.url})` : 
         mainText;
 
       fetch(config.DISCORD_WEBHOOK_URL, {

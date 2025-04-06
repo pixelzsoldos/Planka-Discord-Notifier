@@ -97,3 +97,15 @@ To add a new language:
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Roadmap
+
+### Planned Features
+
+#### Discord Mention System
+- Ping Discord roles based on different events
+- Customizable mention rules:
+  - Notify project managers when deadlines are approaching
+  - Ping dedicated teams for urgent cards
+  - Notify specific roles for board events
+- Configure mention settings through environment variables
