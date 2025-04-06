@@ -1,4 +1,5 @@
 // config.js
+const { version } = require('./package.json');
 require('dotenv').config();
 
 // Default configuration values
@@ -10,7 +11,8 @@ const defaultConfig = {
         "board-id-1": "Board 1",
         "board-id-2": "Board 2"
         // További táblák...
-    }
+    },
+    VERSION: version
 };
 
 // Load language file based on configuration
@@ -29,10 +31,11 @@ const config = {
     PORT: process.env.PORT || defaultConfig.PORT,
     LANGUAGE: process.env.LANGUAGE || defaultConfig.LANGUAGE,
     BOARD_NAMES: process.env.BOARD_NAMES ? JSON.parse(process.env.BOARD_NAMES) : defaultConfig.BOARD_NAMES,
-    DISCORD_WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL
+    DISCORD_WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL,
+    VERSION: version
 };
 
 // Load language strings
 config.strings = loadLanguage(config.LANGUAGE);
 
-module.exports = config; 
+module.exports = config;

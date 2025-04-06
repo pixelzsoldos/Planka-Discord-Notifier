@@ -168,6 +168,7 @@ app.post("/", (req, res) => {
 });
 
 app.listen(config.PORT, () => {
+  console.log(`Planka Discord Notifier v${config.VERSION}`);
   console.log(`${config.strings.logging.serverRunning}${config.PORT}`);
 });
 
