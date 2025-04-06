@@ -37,15 +37,20 @@ cd planka-discord-notifier
 ```bash
 npm install
 ```
-3. Copy `.env.example` to `.env`
-4. Configure environment variables in `.env`:
+3. Copy `.env.example` to `.env`:
+```bash
+cp .env.example .env
+```
+4. Configure your environment variables in `.env` file (DO NOT commit this file):
    - `PLANKA_BASE_URL`: Your Planka server URL
    - `PORT`: Webhook server port (default: 3001)
    - `DISCORD_WEBHOOK_URL`: Your Discord webhook URL
    - `BOARD_NAMES`: JSON object mapping board IDs to names
    - `LANGUAGE`: Language code (`en` or `hu`, default: `en`)
 
-Example `.env` file:
+> ⚠️ **Security Note**: Never commit your `.env` file to version control. The `.gitignore` file is configured to exclude it. Always use `.env.example` as a template and create your own `.env` file locally.
+
+Example `.env` file structure (replace with your actual values):
 ```env
 PLANKA_BASE_URL=https://your-planka-url.com
 PORT=3001
