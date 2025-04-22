@@ -120,7 +120,10 @@ app.post("/", (req, res) => {
   }
 
   if (eventData.name || eventData.id) {
-    if (config.DISCORD_WEBHOOK_URL) {
+    // Get webhook URL for the specific board
+    const webhookUrl = config.getWebhookUrl(eventData.board);
+    
+    if (webhookUrl) {
       const fetch = (...args) =>
         import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
@@ -175,7 +178,7 @@ app.post("/", (req, res) => {
         `${mainText}\n\n[${config.strings.cardLink}](${eventData.url})` : 
         mainText;
 
-      fetch(config.DISCORD_WEBHOOK_URL, {
+      fetch(webhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

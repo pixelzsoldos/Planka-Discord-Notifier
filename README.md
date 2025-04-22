@@ -63,7 +63,8 @@ cp .env.example .env
 4. Configure your environment variables in `.env` file (DO NOT commit this file):
    - `PLANKA_BASE_URL`: Your Planka server URL
    - `PORT`: Webhook server port (default: 3001)
-   - `DISCORD_WEBHOOK_URL`: Your Discord webhook URL
+   - `DISCORD_WEBHOOK_URL`: Default Discord webhook URL (used if no specific board webhook is found)
+   - `BOARD_WEBHOOKS`: JSON object mapping board IDs to Discord webhook URLs
    - `BOARD_NAMES`: JSON object mapping board IDs to names
    - `LANGUAGE`: Language code (`en` or `hu`, default: `en`)
 
@@ -74,7 +75,8 @@ Example `.env` file structure (replace with your actual values):
 PLANKA_BASE_URL=https://your-planka-url.com
 PORT=3001
 LANGUAGE=en
-DISCORD_WEBHOOK_URL=your-discord-webhook-url
+DISCORD_WEBHOOK_URL=your-default-discord-webhook-url
+BOARD_WEBHOOKS={"board-id-1":"webhook-url-1","board-id-2":"webhook-url-2"}
 BOARD_NAMES={"board-id-1":"Board 1","board-id-2":"Board 2"}
 ```
 
