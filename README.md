@@ -134,7 +134,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
   - Notify specific roles for board events
 - Configure mention settings through environment variables
 
-## Changelog
+<details>
+<summary>Changelog</summary>
 
 ### [1.0.3] - 2024-03-19
 #### Added
@@ -171,3 +172,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - Color-coded messages based on event type
 - Environment variable configuration
 - Custom board name mapping
+</details>
