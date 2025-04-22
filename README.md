@@ -22,6 +22,25 @@ A webhook service that sends Planka board events to Discord channels using webho
 Jump to card
 ```
 
+### Change Detection
+When a card is updated, the notification includes:
+- Previous and new values for changed fields
+- Detailed change history
+- Visual indicators for different types of changes
+
+Example of change detection:
+```
+[Avatar] Username
+📋 Board Name board ✏️ Card Name was updated
+
+Changes:
+• Name: "Old Name" → "New Name"
+• Description: "Old description" → "New description"
+• List: "Old List" → "New List"
+
+Jump to card
+```
+
 ### Supported Languages
 - 🇬🇧 English (default)
 - 🇭🇺 Hungarian
@@ -116,6 +135,13 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - Configure mention settings through environment variables
 
 ## Changelog
+
+### [1.0.3] - 2024-03-19
+#### Added
+- Change detection system for card updates
+- Detailed change history in notifications
+- Visual indicators for different types of changes
+- Previous and new value comparison
 
 ### [1.0.2] - 2024-03-19
 #### Added
