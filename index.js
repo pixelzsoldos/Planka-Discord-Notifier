@@ -212,6 +212,39 @@ app.post("/", (req, res) => {
   res.status(200).send("OK");
 });
 
+function detectChanges(prevData, currentData) {
+    const changes = [];
+    
+    // Name change
+    if (prevData.item.name !== currentData.item.name) {
+        changes.push({
+            field: "name",
+            old: prevData.item.name,
+            new: currentData.item.name
+        });
+    }
+    
+    // Description change
+    if (prevData.item.description !== currentData.item.description) {
+        changes.push({
+            field: "description",
+            old: prevData.item.description,
+            new: currentData.item.description
+        });
+    }
+    
+    // List change
+    if (prevData.item.listId !== currentData.item.listId) {
+        changes.push({
+            field: "list",
+            old: prevData.item.listId,
+            new: currentData.item.listId
+        });
+    }
+    
+    return changes;
+}
+
 app.listen(config.PORT, () => {
   console.log(`Planka Discord Notifier v${config.VERSION}`);
   console.log(`${config.strings.logging.serverRunning}${config.PORT}`);
