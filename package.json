@@ -1,6 +1,6 @@
 {
   "name": "discord-planka-notification",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A webhook service that sends Planka board events to Discord channels",
   "main": "index.js",
   "scripts": {
