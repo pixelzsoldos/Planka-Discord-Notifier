@@ -58,7 +58,7 @@ app.post("/", (req, res) => {
       eventData.id = itemData.id;
       eventData.list = itemData.listId;
       eventData.board = itemData.boardId;
-      eventData.boardName = config.getBoardName(itemData.boardId);
+      eventData.boardName = config.BOARD_NAMES[itemData.boardId] || config.strings.unknownBoard;
       eventData.created = itemData.createdAt;
       eventData.url = `${config.PLANKA_BASE_URL}/cards/${itemData.id}`;
     }
@@ -120,10 +120,7 @@ app.post("/", (req, res) => {
   }
 
   if (eventData.name || eventData.id) {
-    // Get webhook URL for the specific board
-    const webhookUrl = config.getWebhookUrl(eventData.board);
-    
-    if (webhookUrl) {
+    if (config.DISCORD_WEBHOOK_URL) {
       const fetch = (...args) =>
         import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
@@ -178,7 +175,7 @@ app.post("/", (req, res) => {
         `${mainText}\n\n[${config.strings.cardLink}](${eventData.url})` : 
         mainText;
 
-      fetch(webhookUrl, {
+      fetch(config.DISCORD_WEBHOOK_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
