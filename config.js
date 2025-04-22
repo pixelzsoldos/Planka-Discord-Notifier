@@ -12,7 +12,15 @@ const PLANKA_BASE_URL = process.env.PLANKA_BASE_URL || 'http://localhost:3000';
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
 
 // Board configuration
-const BOARDS = process.env.BOARDS ? JSON.parse(process.env.BOARDS) : {};
+let BOARDS = {};
+try {
+    if (process.env.BOARDS) {
+        BOARDS = JSON.parse(process.env.BOARDS);
+    }
+} catch (error) {
+    console.error('Error parsing BOARDS environment variable:', error);
+    BOARDS = {};
+}
 
 // Get webhook URL for a specific board
 function getWebhookUrl(boardId) {
