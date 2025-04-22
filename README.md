@@ -66,7 +66,7 @@ cp .env.example .env
    - `DISCORD_WEBHOOK_URL`: Default Discord webhook URL (used if no specific board webhook is found)
    - `BOARD_NAMES`: JSON object mapping board IDs to board names
    - `LANGUAGE`: Language code (`en` or `hu`, default: `en`)
-   - Board-specific webhook URLs (e.g., `KELETI_WEBHOOK_URL`, `NYUGATI_WEBHOOK_URL`)
+   - Board-specific webhook URLs (e.g., `BOARD1_WEBHOOK_URL`, `BOARD2_WEBHOOK_URL`)
 
 > ⚠️ **Security Note**: Never commit your `.env` file to version control. The `.gitignore` file is configured to exclude it. Always use `.env.example` as a template and create your own `.env` file locally.
 
@@ -76,11 +76,11 @@ PLANKA_BASE_URL=https://your-planka-url.com
 PORT=3001
 LANGUAGE=en
 DISCORD_WEBHOOK_URL=your-default-discord-webhook-url
-KELETI_WEBHOOK_URL=your-keleti-webhook-url
-NYUGATI_WEBHOOK_URL=your-nyugati-webhook-url
+BOARD1_WEBHOOK_URL=your-board1-webhook-url
+BOARD2_WEBHOOK_URL=your-board2-webhook-url
 BOARD_NAMES={
-  "board-id-1": "Keleti",
-  "board-id-2": "Nyugati"
+  "board-id-1": "BOARD1",
+  "board-id-2": "BOARD2"
 }
 ```
 
