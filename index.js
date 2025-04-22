@@ -58,7 +58,7 @@ app.post("/", (req, res) => {
       eventData.id = itemData.id;
       eventData.list = itemData.listId;
       eventData.board = itemData.boardId;
-      eventData.boardName = config.BOARD_NAMES[itemData.boardId] || config.strings.unknownBoard;
+      eventData.boardName = config.getBoardName(itemData.boardId);
       eventData.created = itemData.createdAt;
       eventData.url = `${config.PLANKA_BASE_URL}/cards/${itemData.id}`;
     }
