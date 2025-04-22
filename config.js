@@ -21,7 +21,11 @@ const strings = require(`./languages/${LANGUAGE}.js`);
 
 // Get webhook URL for a specific board
 function getWebhookUrl(boardId) {
-    return BOARD_WEBHOOKS[boardId] || DISCORD_WEBHOOK_URL;
+    // Get board name from ID
+    const boardName = BOARD_NAMES[boardId] || config.strings.unknownBoard;
+    
+    // Return webhook URL for board name or default
+    return BOARD_WEBHOOKS[boardName] || DISCORD_WEBHOOK_URL;
 }
 
 module.exports = {
