@@ -72,6 +72,51 @@ app.post("/", (req, res) => {
 
   } catch (error) {
     console.error(config.strings.errors.payloadError, error);
+    
+    // Send error notification to Discord
+    if (config.DISCORD_WEBHOOK_URL) {
+      const fetch = (...args) =>
+        import("node-fetch").then(({ default: fetch }) => fetch(...args));
+
+      const errorMessage = {
+        content: "@planka",
+        embeds: [{
+          title: "❌ Error in Planka Discord Notifier",
+          description: `**Error Message:** ${error.message}\n**Stack Trace:** \`\`\`${error.stack}\`\`\``,
+          color: 0xFF0000, // Red color for errors
+          fields: [
+            {
+              name: "Version",
+              value: `v${config.VERSION}`,
+              inline: true
+            },
+            {
+              name: "Time",
+              value: new Date().toISOString(),
+              inline: true
+            }
+          ],
+          timestamp: new Date().toISOString()
+        }]
+      };
+
+      fetch(config.DISCORD_WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(errorMessage),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            return response.text().then((text) => {
+              throw new Error(
+                `${config.strings.errors.webhookError} ${response.status} ${text}`,
+              );
+            });
+          }
+          console.log(config.strings.logging.errorNotificationSent);
+        })
+        .catch(console.error);
+    }
   }
 
   if (eventData.name || eventData.id) {

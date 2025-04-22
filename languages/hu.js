@@ -19,6 +19,7 @@ module.exports = {
         webhookReceived: "Webhook érkezett:",
         processedData: "Feldolgozott eventData:",
         notificationSent: "Discord értesítés sikeresen elküldve",
+        errorNotificationSent: "Hiba értesítés elküldve a Discordra",
         serverRunning: "Webhook listener fut a http://localhost:"
     },
     board: "táblán",

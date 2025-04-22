@@ -19,6 +19,7 @@ module.exports = {
         webhookReceived: "Webhook received:",
         processedData: "Processed event data:",
         notificationSent: "Discord notification sent successfully",
+        errorNotificationSent: "Error notification sent to Discord",
         serverRunning: "Webhook listener running at http://localhost:"
     },
     board: "board",
