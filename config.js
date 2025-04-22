@@ -11,20 +11,16 @@ const PLANKA_BASE_URL = process.env.PLANKA_BASE_URL || 'http://localhost:3000';
 // Discord webhook configuration
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
 
-// Board name mapping
-const BOARD_NAMES = process.env.BOARD_NAMES ? JSON.parse(process.env.BOARD_NAMES) : {};
+// Board configuration
+const BOARDS = process.env.BOARDS ? JSON.parse(process.env.BOARDS) : {};
 
 // Get webhook URL for a specific board
 function getWebhookUrl(boardId) {
-    // Get board name from ID
-    const boardName = BOARD_NAMES[boardId];
+    // Find board by ID
+    const board = Object.values(BOARDS).find(b => b.id === boardId);
     
-    if (boardName) {
-        // Get board-specific webhook URL from environment variable
-        const boardWebhookUrl = process.env[`${boardName.toUpperCase()}_WEBHOOK_URL`];
-        if (boardWebhookUrl) {
-            return boardWebhookUrl;
-        }
+    if (board && board.webhook) {
+        return board.webhook;
     }
     
     // Return default webhook URL if no specific board webhook exists
@@ -33,7 +29,14 @@ function getWebhookUrl(boardId) {
 
 // Get board name for a specific board ID
 function getBoardName(boardId) {
-    return BOARD_NAMES[boardId] || "Unknown Board";
+    // Find board by ID
+    const board = Object.values(BOARDS).find(b => b.id === boardId);
+    
+    if (board) {
+        return board.name;
+    }
+    
+    return "Unknown Board";
 }
 
 // Language configuration
@@ -45,7 +48,7 @@ module.exports = {
     PORT,
     PLANKA_BASE_URL,
     DISCORD_WEBHOOK_URL,
-    BOARD_NAMES,
+    BOARDS,
     LANGUAGE,
     strings,
     getWebhookUrl,
