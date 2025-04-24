@@ -231,31 +231,37 @@ app.post("/", (req, res) => {
 function detectChanges(prevData, currentData) {
     const changes = [];
     
-    // Name change
-    if (prevData.item.name !== currentData.item.name) {
-        changes.push({
-            field: "name",
-            old: prevData.item.name,
-            new: currentData.item.name
-        });
-    }
-    
-    // Description change
-    if (prevData.item.description !== currentData.item.description) {
-        changes.push({
-            field: "description",
-            old: prevData.item.description,
-            new: currentData.item.description
-        });
-    }
-    
-    // List change
-    if (prevData.item.listId !== currentData.item.listId) {
-        changes.push({
-            field: "list",
-            old: prevData.item.listId,
-            new: currentData.item.listId
-        });
+    try {
+        // Name change
+        if (prevData && prevData.item && currentData && currentData.item) {
+            if (prevData.item.name !== currentData.item.name) {
+                changes.push({
+                    field: "name",
+                    old: prevData.item.name,
+                    new: currentData.item.name
+                });
+            }
+            
+            // Description change
+            if (prevData.item.description !== currentData.item.description) {
+                changes.push({
+                    field: "description",
+                    old: prevData.item.description,
+                    new: currentData.item.description
+                });
+            }
+            
+            // List change
+            if (prevData.item.listId !== currentData.item.listId) {
+                changes.push({
+                    field: "list",
+                    old: prevData.item.listId,
+                    new: currentData.item.listId
+                });
+            }
+        }
+    } catch (error) {
+        console.error("Error in detectChanges:", error);
     }
     
     return changes;
