@@ -30,7 +30,16 @@ const config = {
     PLANKA_BASE_URL: process.env.PLANKA_BASE_URL || defaultConfig.PLANKA_BASE_URL,
     PORT: process.env.PORT || defaultConfig.PORT,
     LANGUAGE: process.env.LANGUAGE || defaultConfig.LANGUAGE,
-    BOARD_NAMES: process.env.BOARD_NAMES ? JSON.parse(process.env.BOARD_NAMES) : defaultConfig.BOARD_NAMES,
+    BOARD_NAMES: (() => {
+        try {
+            return process.env.BOARD_NAMES && process.env.BOARD_NAMES.trim() !== '' 
+                ? JSON.parse(process.env.BOARD_NAMES) 
+                : defaultConfig.BOARD_NAMES;
+        } catch (e) {
+            console.warn('Invalid BOARD_NAMES JSON, using default');
+            return defaultConfig.BOARD_NAMES;
+        }
+    })(),
     DISCORD_WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL,
     VERSION: version
 };
