@@ -129,6 +129,7 @@ app.post("/", (req, res) => {
       let showCardLink = true;
       let emoji = "";
       let boardEmoji = "📋";
+      let changes = [];
 
       switch(eventData.event) {
         case 'cardCreate':
@@ -143,6 +144,10 @@ app.post("/", (req, res) => {
         case 'cardUpdate':
           emoji = "✏️";
           actionText = config.strings.actions.cardUpdate;
+          // Check for changes in card update
+          if (payload.prevData && payload.prevData.item) {
+            changes = detectChanges(payload.prevData, payload);
+          }
           break;
         case 'cardMemberAdd':
           emoji = "👥";
@@ -170,7 +175,18 @@ app.post("/", (req, res) => {
       }
 
       // Build description with new format
-      const mainText = `${boardEmoji} **${eventData.boardName}** ${config.strings.board} ${emoji} **${eventData.name}** ${config.strings.card} ${actionText}`;
+      let mainText = `${boardEmoji} **${eventData.boardName}** ${config.strings.board} ${emoji} **${eventData.name}** ${config.strings.card} ${actionText}`;
+      
+      // Add changes if any
+      if (changes.length > 0) {
+        mainText += `\n\n**${config.strings.changes}:**`;
+        changes.forEach(change => {
+          if (change.field === "name") {
+            mainText += `\n• ${config.strings.name}: "${change.old}" → "${change.new}"`;
+          }
+        });
+      }
+
       const description = showCardLink ? 
         `${mainText}\n\n[${config.strings.cardLink}](${eventData.url})` : 
         mainText;

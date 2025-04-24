@@ -26,5 +26,7 @@ module.exports = {
     card: "kártyát",
     unknownBoard: "Ismeretlen tábla",
     unknownUser: "Ismeretlen felhasználó",
-    cardLink: "Kártya megtekintése"
+    cardLink: "Kártya megtekintése",
+    changes: "Változások",
+    name: "Cím"
 }; 

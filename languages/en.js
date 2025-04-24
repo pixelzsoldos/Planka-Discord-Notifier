@@ -26,5 +26,7 @@ module.exports = {
     card: "card",
     unknownBoard: "Unknown board",
     unknownUser: "Unknown user",
-    cardLink: "View card"
+    cardLink: "View card",
+    changes: "Changes",
+    name: "Name"
 }; 
