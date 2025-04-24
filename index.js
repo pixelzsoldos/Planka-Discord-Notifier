@@ -70,6 +70,112 @@ app.post("/", (req, res) => {
 
     console.log(config.strings.logging.processedData, eventData);
 
+    if (eventData.name || eventData.id) {
+      if (config.DISCORD_WEBHOOK_URL) {
+        const fetch = (...args) =>
+          import("node-fetch").then(({ default: fetch }) => fetch(...args));
+
+        // Format Discord message based on event type
+        let actionText = "";
+        let showCardLink = true;
+        let emoji = "";
+        let boardEmoji = "📋";
+        let changes = [];
+
+        switch(eventData.event) {
+          case 'cardCreate':
+            emoji = "📝";
+            actionText = config.strings.actions.cardCreate;
+            break;
+          case 'cardDelete':
+            emoji = "🗑️";
+            actionText = config.strings.actions.cardDelete;
+            showCardLink = false;
+            break;
+          case 'cardUpdate':
+            emoji = "✏️";
+            actionText = config.strings.actions.cardUpdate;
+            // Check for changes in card update
+            if (payload.prevData && payload.prevData.item) {
+              changes = detectChanges(payload.prevData, payload);
+            }
+            break;
+          case 'cardMemberAdd':
+            emoji = "👥";
+            actionText = config.strings.actions.cardMemberAdd;
+            break;
+          case 'cardMemberRemove':
+            emoji = "👤";
+            actionText = config.strings.actions.cardMemberRemove;
+            break;
+          case 'cardDueDateAdd':
+            emoji = "📅";
+            actionText = config.strings.actions.cardDueDateAdd;
+            break;
+          case 'cardDueDateComplete':
+            emoji = "✅";
+            actionText = config.strings.actions.cardDueDateComplete;
+            break;
+          case 'cardMove':
+            emoji = "↔️";
+            actionText = config.strings.actions.cardMove;
+            break;
+          default:
+            emoji = "ℹ️";
+            actionText = "performed action on";
+        }
+
+        // Build description with new format
+        let mainText = `${boardEmoji} **${eventData.boardName}** ${config.strings.board} ${emoji} **${eventData.name}** ${config.strings.card} ${actionText}`;
+        
+        // Add changes if any
+        if (changes.length > 0) {
+          mainText += `\n\n**${config.strings.changes}:**`;
+          changes.forEach(change => {
+            if (change.field === "name") {
+              mainText += `\n• ${config.strings.name}: "${change.old}" → "${change.new}"`;
+            }
+          });
+        }
+
+        const description = showCardLink ? 
+          `${mainText}\n\n[${config.strings.cardLink}](${eventData.url})` : 
+          mainText;
+
+        fetch(config.DISCORD_WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            embeds: [{
+              author: {
+                name: eventData.user || config.strings.unknownUser,
+                icon_url: eventData.avatarUrl || null
+              },
+              description: description,
+              color: eventData.event === 'cardCreate' ? 0x2ecc71 : 
+                     eventData.event === 'cardDelete' ? 0xe74c3c : 
+                     eventData.event === 'cardUpdate' ? 0x3498db : 
+                     0x95a5a6,
+              timestamp: eventData.created
+            }]
+          }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              return response.text().then((text) => {
+                throw new Error(
+                  `${config.strings.errors.webhookError} ${response.status} ${text}`,
+                );
+              });
+            }
+            console.log(config.strings.logging.notificationSent);
+          })
+          .catch(console.error);
+      }
+    } else {
+      console.error(config.strings.errors.missingData);
+    }
+
   } catch (error) {
     console.error(config.strings.errors.payloadError, error);
     
@@ -117,112 +223,6 @@ app.post("/", (req, res) => {
         })
         .catch(console.error);
     }
-  }
-
-  if (eventData.name || eventData.id) {
-    if (config.DISCORD_WEBHOOK_URL) {
-      const fetch = (...args) =>
-        import("node-fetch").then(({ default: fetch }) => fetch(...args));
-
-      // Format Discord message based on event type
-      let actionText = "";
-      let showCardLink = true;
-      let emoji = "";
-      let boardEmoji = "📋";
-      let changes = [];
-
-      switch(eventData.event) {
-        case 'cardCreate':
-          emoji = "📝";
-          actionText = config.strings.actions.cardCreate;
-          break;
-        case 'cardDelete':
-          emoji = "🗑️";
-          actionText = config.strings.actions.cardDelete;
-          showCardLink = false;
-          break;
-        case 'cardUpdate':
-          emoji = "✏️";
-          actionText = config.strings.actions.cardUpdate;
-          // Check for changes in card update
-          if (payload.prevData && payload.prevData.item) {
-            changes = detectChanges(payload.prevData, payload);
-          }
-          break;
-        case 'cardMemberAdd':
-          emoji = "👥";
-          actionText = config.strings.actions.cardMemberAdd;
-          break;
-        case 'cardMemberRemove':
-          emoji = "👤";
-          actionText = config.strings.actions.cardMemberRemove;
-          break;
-        case 'cardDueDateAdd':
-          emoji = "📅";
-          actionText = config.strings.actions.cardDueDateAdd;
-          break;
-        case 'cardDueDateComplete':
-          emoji = "✅";
-          actionText = config.strings.actions.cardDueDateComplete;
-          break;
-        case 'cardMove':
-          emoji = "↔️";
-          actionText = config.strings.actions.cardMove;
-          break;
-        default:
-          emoji = "ℹ️";
-          actionText = "performed action on";
-      }
-
-      // Build description with new format
-      let mainText = `${boardEmoji} **${eventData.boardName}** ${config.strings.board} ${emoji} **${eventData.name}** ${config.strings.card} ${actionText}`;
-      
-      // Add changes if any
-      if (changes.length > 0) {
-        mainText += `\n\n**${config.strings.changes}:**`;
-        changes.forEach(change => {
-          if (change.field === "name") {
-            mainText += `\n• ${config.strings.name}: "${change.old}" → "${change.new}"`;
-          }
-        });
-      }
-
-      const description = showCardLink ? 
-        `${mainText}\n\n[${config.strings.cardLink}](${eventData.url})` : 
-        mainText;
-
-      fetch(config.DISCORD_WEBHOOK_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          embeds: [{
-            author: {
-              name: eventData.user || config.strings.unknownUser,
-              icon_url: eventData.avatarUrl || null
-            },
-            description: description,
-            color: eventData.event === 'cardCreate' ? 0x2ecc71 : 
-                   eventData.event === 'cardDelete' ? 0xe74c3c : 
-                   eventData.event === 'cardUpdate' ? 0x3498db : 
-                   0x95a5a6,
-            timestamp: eventData.created
-          }]
-        }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            return response.text().then((text) => {
-              throw new Error(
-                `${config.strings.errors.webhookError} ${response.status} ${text}`,
-              );
-            });
-          }
-          console.log(config.strings.logging.notificationSent);
-        })
-        .catch(console.error);
-    }
-  } else {
-    console.error(config.strings.errors.missingData);
   }
 
   res.status(200).send("OK");
